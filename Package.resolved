@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "constant-time-swift",
+        "repositoryURL": "https://github.com/nixberg/constant-time-swift",
+        "state": {
+          "branch": null,
+          "revision": "108a66b675b619f9d2260d56280f2613987f56e1",
+          "version": "0.9.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
