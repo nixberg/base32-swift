@@ -1,7 +1,7 @@
 [![Swift](https://github.com/nixberg/base32-swift/actions/workflows/swift.yml/badge.svg)](https://github.com/nixberg/base32-swift/actions/workflows/swift.yml)
 
-# Base32
+# base32-swift
 
 Experimental, do not use.
 
-`0123456789abcdefghjkmnpqestuwxyz`.
+Constant-time. Nonstandard character set `0123456789abcdefghjkmnpqestuwxyz`.
