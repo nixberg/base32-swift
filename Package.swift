@@ -10,13 +10,13 @@ let package = Package(
             targets: ["Base32"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/nixberg/constant-time-swift", from: "0.9.0"),
+        .package(url: "https://github.com/nixberg/subtle-swift", from: "0.10.0"),
     ],
     targets: [
         .target(
             name: "Base32",
             dependencies: [
-                .product(name: "ConstantTime", package: "constant-time-swift"),
+                .product(name: "Subtle", package: "subtle-swift"),
             ]),
         .testTarget(
             name: "Base32Tests",

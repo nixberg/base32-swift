@@ -1,5 +1,5 @@
-import ConstantTime
 import Foundation
+import Subtle
 
 public enum DecodingError: Error {
     case dataCorrupted
@@ -84,12 +84,12 @@ fileprivate extension UInt8 {
         let isLessThan28: Choice = self < 28
         
         var character: UInt8 = 0
-        character.replace(with: self &- 00 &+ 0x30, if:                  isLessThan10) // 0123456789
-        character.replace(with: self &- 10 &+ 0x61, if: !isLessThan10 && isLessThan18) // abcdefgh
-        character.replace(with: self &- 18 &+ 0x6a, if: !isLessThan18 && isLessThan20) // jk
-        character.replace(with: self &- 20 &+ 0x6d, if: !isLessThan20 && isLessThan22) // mn
-        character.replace(with: self &- 22 &+ 0x70, if: !isLessThan22 && isLessThan28) // pqrstu
-        character.replace(with: self &- 28 &+ 0x77, if: !isLessThan28)                 // wxyz
+        character.replace(with: self &- 00 &+ 0x30, if:                  isLessThan10)
+        character.replace(with: self &- 10 &+ 0x61, if: !isLessThan10 && isLessThan18)
+        character.replace(with: self &- 18 &+ 0x6a, if: !isLessThan18 && isLessThan20)
+        character.replace(with: self &- 20 &+ 0x6d, if: !isLessThan20 && isLessThan22)
+        character.replace(with: self &- 22 &+ 0x70, if: !isLessThan22 && isLessThan28)
+        character.replace(with: self &- 28 &+ 0x77, if: !isLessThan28)
         return character
     }
     

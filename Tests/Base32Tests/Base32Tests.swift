@@ -3,9 +3,8 @@ import XCTest
 
 final class Base32Tests: XCTestCase {
     func testBase32() throws {
-        var rng = SystemRandomNumberGenerator()
-        
         for count in 0..<512 {
+            var rng = SystemRandomNumberGenerator()
             let bytes: [UInt8] = (0..<count).map { _ in rng.next() }
             
             let encoded = bytes.base32Encoded()
