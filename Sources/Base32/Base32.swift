@@ -1,16 +1,12 @@
 import Foundation
 import Subtle
 
-public enum DecodingError: Error {
-    case dataCorrupted
-}
-
 public extension Sequence where Element == UInt8 {
-    func base32Encoded() -> String {
+    func base32EncodedBytes() -> [UInt8] {
         var bytes = self.makeIterator()
         
         guard let first = bytes.next() else {
-            return ""
+            return []
         }
         
         var characters: [UInt8] = []
@@ -28,48 +24,62 @@ public extension Sequence where Element == UInt8 {
             }
         }
         
-        return String(bytes: characters, encoding: .ascii)!
+        return characters
+    }
+    
+    func base32EncodedString() -> String {
+        String(bytes: self.base32EncodedBytes(), encoding: .ascii)!
     }
 }
 
-public extension StringProtocol {
-    func appendBase32DecodedBytes<Bytes>(to bytes: inout Bytes) throws
-    where Bytes: RangeReplaceableCollection, Bytes.Element == UInt8 {
-        if isEmpty {
-            return
+public extension Array where Element == UInt8 {
+    init?<Base32Bytes>(base32Encoded base32Bytes: Base32Bytes)
+    where Base32Bytes: Sequence, Base32Bytes.Element == UInt8 {
+        self = []
+        guard self.appendingEncodedBytes(base32Bytes) else {
+            return nil
         }
-        
+    }
+    
+    init?<Base32Bytes>(base32Decoded base32Bytes: Base32Bytes)
+    where Base32Bytes: Collection, Base32Bytes.Element == UInt8 {
+        self = []
+        self.reserveCapacity((base32Bytes.count * 5) / 8)
+        guard self.appendingEncodedBytes(base32Bytes) else {
+            return nil
+        }
+    }
+    
+    init?<Base32String>(base32Encoded base32String: Base32String)
+    where Base32String: StringProtocol {
+        self = []
+        self.reserveCapacity((base32String.count * 5) / 8)
+        guard self.appendingEncodedBytes(base32String.utf8) else {
+            return nil
+        }
+    }
+    
+    private mutating func appendingEncodedBytes<Characters>(_ characters: Characters) -> Bool
+    where Characters: Sequence, Characters.Element == UInt8 {
         var accumulator: UInt16 = 0
         var unsetBits = 16
         
-        for character in self.utf8 {
+        for character in characters {
             guard let bits = character.mappedToBits() else {
-                throw DecodingError.dataCorrupted
+                return false
             }
             
             unsetBits -= 5
             accumulator |= UInt16(bits) &<< unsetBits
             
             if unsetBits <= 8 {
-                bytes.append(UInt8(truncatingIfNeeded: accumulator >> 8));
+                self.append(UInt8(truncatingIfNeeded: accumulator >> 8));
                 accumulator <<= 8
                 unsetBits += 8
             }
         }
-    }
-    
-    func base32Decoded() throws -> [UInt8] {
-        var bytes: [UInt8] = []
-        bytes.reserveCapacity((count * 5) / 8)
-        try self.appendBase32DecodedBytes(to: &bytes)
-        return bytes
-    }
-}
-
-fileprivate extension UInt16 {
-    @inline(__always)
-    func mappedToCharacter() -> UInt8 {
-        UInt8(truncatingIfNeeded: self).mappedToCharacter()
+        
+        return true
     }
 }
 
@@ -102,5 +112,12 @@ fileprivate extension UInt8 {
         bits.replace(with: self &- 0x70 &+ 22, if: (0x6f < self) && (self < 0x76)) // pqrstu
         bits.replace(with: self &- 0x77 &+ 28, if: (0x76 < self) && (self < 0x7b)) // wxyz
         return Bool(Choice(bits != 0xff)) ? bits : nil
+    }
+}
+
+fileprivate extension UInt16 {
+    @inline(__always)
+    func mappedToCharacter() -> UInt8 {
+        UInt8(truncatingIfNeeded: self).mappedToCharacter()
     }
 }
