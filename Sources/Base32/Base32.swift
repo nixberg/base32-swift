@@ -41,7 +41,7 @@ public extension Array where Element == UInt8 {
         }
     }
     
-    init?<Base32Bytes>(base32Decoded base32Bytes: Base32Bytes)
+    init?<Base32Bytes>(base32Encoded base32Bytes: Base32Bytes)
     where Base32Bytes: Collection, Base32Bytes.Element == UInt8 {
         self = []
         self.reserveCapacity((base32Bytes.count * 5) / 8)
