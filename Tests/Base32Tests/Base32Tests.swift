@@ -1,4 +1,4 @@
-@testable import Base32
+import Base32
 import XCTest
 
 final class Base32Tests: XCTestCase {

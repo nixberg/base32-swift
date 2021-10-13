@@ -61,6 +61,8 @@ public extension Array where Element == UInt8 {
     
     private mutating func appendingEncodedBytes<Characters>(_ characters: Characters) -> Bool
     where Characters: Sequence, Characters.Element == UInt8 {
+        var characterCount = 0
+        
         var accumulator: UInt16 = 0
         var unsetBits = 16
         
@@ -68,15 +70,20 @@ public extension Array where Element == UInt8 {
             guard let bits = character.mappedToBits() else {
                 return false
             }
+            characterCount += 1
             
             unsetBits -= 5
             accumulator |= UInt16(bits) &<< unsetBits
             
             if unsetBits <= 8 {
-                self.append(UInt8(truncatingIfNeeded: accumulator >> 8));
+                self.append(UInt8(truncatingIfNeeded: accumulator >> 8))
                 accumulator <<= 8
                 unsetBits += 8
             }
+        }
+        
+        guard [0, 2, 4, 5, 7].contains(characterCount % 8), accumulator == 0 else {
+            return false
         }
         
         return true
