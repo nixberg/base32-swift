@@ -1,16 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "subtle-swift",
-        "repositoryURL": "https://github.com/nixberg/subtle-swift",
-        "state": {
-          "branch": null,
-          "revision": "c71c45c0cabbd1809ebaf3b328684b04bac1c851",
-          "version": "0.10.0"
-        }
+  "pins" : [
+    {
+      "identity" : "subtle-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nixberg/subtle-swift",
+      "state" : {
+        "revision" : "bfe1e1a45656c05a89e8a677b3ee5215eeaef18e",
+        "version" : "0.11.0"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }

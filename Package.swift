@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.7
 
 import PackageDescription
 
@@ -10,7 +10,7 @@ let package = Package(
             targets: ["Base32"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/nixberg/subtle-swift", from: "0.10.0"),
+        .package(url: "https://github.com/nixberg/subtle-swift", "0.11.0"..<"0.12.0"),
     ],
     targets: [
         .target(
